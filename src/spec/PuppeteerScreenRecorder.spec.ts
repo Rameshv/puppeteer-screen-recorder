@@ -2,7 +2,8 @@ import fs from 'fs';
 import { dirname } from 'path';
 
 import { describe, expect, it } from '@jest/globals';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import 'dotenv/config'; // Import dotenv to load .env file
 
 import { PuppeteerScreenRecorder, PuppeteerScreenRecorderOptions } from '../';
 

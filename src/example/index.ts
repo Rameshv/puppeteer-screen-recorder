@@ -1,4 +1,5 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
+import 'dotenv/config'; // Import dotenv to load .env file
 
 import { PuppeteerScreenRecorder } from '../lib/PuppeteerScreenRecorder';
 
@@ -12,8 +13,15 @@ function sleep(time: number) {
 /** @ignore */
 async function testStartMethod(format: string) {
   const executablePath = process.env['PUPPETEER_EXECUTABLE_PATH'];
+
+  if (!executablePath) {
+    throw new Error(
+      'PUPPETEER_EXECUTABLE_PATH environment variable is not set. Please create a .env file with this variable.',
+    );
+  }
+
   const browser = await puppeteer.launch({
-    ...(executablePath ? { executablePath: executablePath } : {}),
+    executablePath,
     headless: false,
   });
   const page = await browser.newPage();
@@ -38,6 +46,10 @@ async function executeSample(format) {
   return testStartMethod(format);
 }
 
-executeSample('./report/video/simple1.mp4').then(() => {
-  console.log('completed');
-});
+executeSample('./report/video/simple1.mp4')
+  .then(() => {
+    console.log('completed');
+  })
+  .catch((err) => {
+    console.error('Error:', err.message);
+  });
